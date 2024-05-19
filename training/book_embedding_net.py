@@ -1,5 +1,6 @@
 import torch.nn as nn
 
+
 class BookEmbeddingNet(nn.Module):
     def __init__(self, num_books, book_feature_dim, embedding_dim):
         super(BookEmbeddingNet, self).__init__()

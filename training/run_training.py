@@ -9,35 +9,41 @@ import argparse
 import os
 import pickle
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--filename')
+    parser.add_argument("-f", "--filename")
     args = parser.parse_args()
 
     # Loads the aggregated user-book interaction data
-    if os.path.exists('data/train_data.csv'):
-        interaction_df = pd.read_csv('data/train_data.csv')
+    if os.path.exists("data/train_data.csv"):
+        interaction_df = pd.read_csv("data/train_data.csv")
     else:
-        raise FileNotFoundError('User-book interaction data not found')
-    print('Done loading interaction DF')
+        raise FileNotFoundError("User-book interaction data not found")
+    print("Done loading interaction DF")
 
     # Map user and book IDs to embedding IDs starting from 1
-    user_to_index = {user_id: i for i, user_id in enumerate(interaction_df['user_id'].unique())}
-    book_to_index = {book_id: i for i, book_id in enumerate(interaction_df['book_id'].unique())}
+    user_to_index = {
+        user_id: i for i, user_id in enumerate(interaction_df["user_id"].unique())
+    }
+    book_to_index = {
+        book_id: i for i, book_id in enumerate(interaction_df["book_id"].unique())
+    }
 
     # Aggregate map of book ID (raw) --> 121-d vector
-    if os.path.exists('data/book_vectors.pickle'):
-        print('Loading book vectors from file')
-        with open('data/book_vectors.pickle', 'rb') as handle:
+    if os.path.exists("data/book_vectors.pickle"):
+        print("Loading book vectors from file")
+        with open("data/book_vectors.pickle", "rb") as handle:
             book_vectors = pickle.load(handle)
     else:
-        print('Building book vectors')
+        print("Building book vectors")
         book_vectors = interaction_df_to_book_vectors(interaction_df, book_to_index)
-    print('Done building book vectors')
+    print("Done building book vectors")
 
     # Generate sparse tensor and grouped interactions
-    sparse_tensor, grouped_interactions = get_sparse_tensor(interaction_df, user_to_index, book_to_index)
-    print('Done generating training data')
+    sparse_tensor, grouped_interactions = get_sparse_tensor(
+        interaction_df, user_to_index, book_to_index
+    )
+    print("Done generating training data")
 
     # Run training
     model = BookEmbeddingNet(len(book_to_index), 121, 128)
@@ -51,10 +57,10 @@ if __name__ == '__main__':
             if (i + 1) > 1:
                 break
 
-            user_index = user_to_index[row['user_id']]
+            user_index = user_to_index[row["user_id"]]
             labels = sparse_tensor[user_index]
 
-            for book_index in row['book_id']:
+            for book_index in row["book_id"]:
                 book_features = torch.tensor(list(book_vectors[book_index]))
                 outputs = model(book_features)
                 loss = criterion(outputs, labels)
@@ -64,8 +70,9 @@ if __name__ == '__main__':
 
             if (i + 1) % 1 == 0:
                 print(
-                    f'Epoch [{epoch + 1}/{num_epochs}], Step [{i + 1}/{len(grouped_interactions)}], Loss: {running_loss / 100:.4f}')
+                    f"Epoch [{epoch + 1}/{num_epochs}], Step [{i + 1}/{len(grouped_interactions)}], Loss: {running_loss / 100:.4f}"
+                )
                 running_loss = 0.0
 
-    torch.save(model, f'binaries/{args.filename}')
-    print('Finished Training')
+    torch.save(model, f"binaries/{args.filename}")
+    print("Finished Training")
