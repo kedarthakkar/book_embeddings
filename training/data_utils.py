@@ -4,6 +4,7 @@ from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import spacy
 import torch
+import pickle
 
 
 def interaction_df_to_book_vectors(interaction_df: pd.DataFrame, book_to_index: dict[int, int]) -> dict[int, list[float]]:
@@ -29,6 +30,9 @@ def interaction_df_to_book_vectors(interaction_df: pd.DataFrame, book_to_index: 
         feature_vec = row.drop(['description', 'title', 'book_id']).values
         book_vec = np.concatenate([feature_vec, description_embed, title_embed], axis=0)
         book_vectors[book_to_index[book_id]] = book_vec
+
+    with open('data/book_vectors.pickle', 'wb') as handle:
+        pickle.dump(book_vectors, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     return book_vectors
 

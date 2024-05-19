@@ -3,3 +3,4 @@ numpy
 spacy
 scikit-learn
 torch
+black

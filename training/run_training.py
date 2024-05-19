@@ -6,6 +6,8 @@ import torch.nn as nn
 import torch.optim as optim
 import torch
 import argparse
+import os
+import pickle
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -13,17 +15,29 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Loads the aggregated user-book interaction data
-    interaction_df = pd.read_csv('../data/train_df.csv')
+    if os.path.exists('data/train_data.csv'):
+        interaction_df = pd.read_csv('data/train_data.csv')
+    else:
+        raise FileNotFoundError('User-book interaction data not found')
+    print('Done loading interaction DF')
 
     # Map user and book IDs to embedding IDs starting from 1
     user_to_index = {user_id: i for i, user_id in enumerate(interaction_df['user_id'].unique())}
     book_to_index = {book_id: i for i, book_id in enumerate(interaction_df['book_id'].unique())}
 
     # Aggregate map of book ID (raw) --> 121-d vector
-    book_vectors = interaction_df_to_book_vectors(interaction_df, book_to_index)
+    if os.path.exists('data/book_vectors.pickle'):
+        print('Loading book vectors from file')
+        with open('data/book_vectors.pickle', 'rb') as handle:
+            book_vectors = pickle.load(handle)
+    else:
+        print('Building book vectors')
+        book_vectors = interaction_df_to_book_vectors(interaction_df, book_to_index)
+    print('Done building book vectors')
 
     # Generate sparse tensor and grouped interactions
-    sparse_tensor, grouped_interactions = get_sparse_tensor(interaction_df, user_to_index, len(user_to_index), len(book_to_index))
+    sparse_tensor, grouped_interactions = get_sparse_tensor(interaction_df, user_to_index, book_to_index)
+    print('Done generating training data')
 
     # Run training
     model = BookEmbeddingNet(len(book_to_index), 121, 128)
