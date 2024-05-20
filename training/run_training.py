@@ -68,7 +68,7 @@ if __name__ == "__main__":
                 optimizer.step()
                 running_loss += loss.item()
 
-            if (i + 1) % 1 == 0:
+            if (i + 1) % 100 == 0:
                 print(
                     f"Epoch [{epoch + 1}/{num_epochs}], Step [{i + 1}/{len(grouped_interactions)}], Loss: {running_loss / 100:.4f}"
                 )
