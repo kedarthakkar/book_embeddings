@@ -46,6 +46,7 @@ if __name__ == "__main__":
     print("Done generating training data")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using {device}")
 
     # Run training
     model = BookEmbeddingNet(len(book_to_index), 121, 128).to(device)
@@ -56,6 +57,8 @@ if __name__ == "__main__":
     for epoch in range(num_epochs):
         running_loss = 0.0
         for i, row in grouped_interactions.iterrows():
+            if (i + 1) == 1501:
+                break
             user_index = user_to_index[row["user_id"]]
             labels = sparse_tensor[user_index].to(device)
 
