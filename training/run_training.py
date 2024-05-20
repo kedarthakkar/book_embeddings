@@ -45,8 +45,10 @@ if __name__ == "__main__":
     )
     print("Done generating training data")
 
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     # Run training
-    model = BookEmbeddingNet(len(book_to_index), 121, 128)
+    model = BookEmbeddingNet(len(book_to_index), 121, 128).to(device)
     criterion = nn.MSELoss()
     optimizer = optim.SGD(model.parameters(), lr=0.01)
 
@@ -58,10 +60,11 @@ if __name__ == "__main__":
                 break
 
             user_index = user_to_index[row["user_id"]]
-            labels = sparse_tensor[user_index]
+            labels = sparse_tensor[user_index].to(device)
 
             for book_index in row["book_id"]:
-                book_features = torch.tensor(list(book_vectors[book_index]))
+                book_features = torch.tensor(list(book_vectors[book_index])).to(device)
+                optimizer.zero_grad()
                 outputs = model(book_features)
                 loss = criterion(outputs, labels)
                 loss.backward()
