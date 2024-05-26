@@ -57,7 +57,7 @@ if __name__ == "__main__":
     for epoch in range(num_epochs):
         running_loss = 0.0
         for i, row in grouped_interactions.iterrows():
-            if (i + 1) == 1501:
+            if (i + 1) == 5001:
                 break
             user_index = user_to_index[row["user_id"]]
             labels = sparse_tensor[user_index].to(device)
