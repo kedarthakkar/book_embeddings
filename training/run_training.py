@@ -55,6 +55,9 @@ if __name__ == "__main__":
 
     num_epochs = 1
     for epoch in range(num_epochs):
+        if (i + 1) == 1501:
+            break
+
         running_loss = 0.0
         for i, row in grouped_interactions.iterrows():
             user_index = user_to_index[row["user_id"]]
