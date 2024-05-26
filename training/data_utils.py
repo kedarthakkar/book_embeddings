@@ -63,7 +63,7 @@ def get_sparse_tensor(
     interaction_df: pd.DataFrame,
     user_to_index: dict[int, int],
     book_to_index: dict[int, int],
-) -> tuple[torch.Tensor, torch.Tensor]:
+):
     def get_label_id(book_ids):
         return [book_to_index[book_id] for book_id in book_ids]
 
