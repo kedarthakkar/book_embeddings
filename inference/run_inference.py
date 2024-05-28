@@ -11,5 +11,5 @@ if __name__ == "__main__":
 
     for vector in book_vectors.values():
         with torch.no_grad():
-            book_tensor = torch.tensor(vector.astype('float32').reshape(1, -1))
+            book_tensor = torch.tensor(vector.astype("float32").reshape(1, -1))
             book_embedding = model.fc1(book_tensor)
