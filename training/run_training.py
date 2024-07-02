@@ -54,12 +54,10 @@ if __name__ == "__main__":
     criterion = nn.MSELoss()
     optimizer = optim.SGD(model.parameters(), lr=0.01)
 
-    num_epochs = 1
+    num_epochs = 5
     for epoch in range(num_epochs):
         running_loss = 0.0
         for i, row in grouped_interactions.iterrows():
-            if (i + 1) == 5001:
-                break
             user_index = user_to_index[row["user_id"]]
             labels = sparse_tensor[user_index].to(device)
 
