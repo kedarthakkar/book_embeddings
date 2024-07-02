@@ -9,7 +9,7 @@ from training.constants import BOOK_FEATURE_DIM, NUM_BOOKS, EMBEDDING_DIM
 if __name__ == "__main__":
     model = BookEmbeddingNet(NUM_BOOKS, BOOK_FEATURE_DIM, EMBEDDING_DIM)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    state_dict = torch.load('binaries/5k_steps_state_dict.pt', map_location=device)
+    state_dict = torch.load("binaries/5k_steps_state_dict.pt", map_location=device)
     model.load_state_dict(state_dict)
     model.eval()
 
