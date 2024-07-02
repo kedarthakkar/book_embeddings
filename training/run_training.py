@@ -76,5 +76,5 @@ if __name__ == "__main__":
                 )
                 running_loss = 0.0
 
-    torch.save(model, f"binaries/{args.filename}")
+    torch.save(model.state_dict(), f"binaries/{args.filename}")
     print("Finished Training")
