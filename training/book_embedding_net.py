@@ -8,6 +8,7 @@ class BookEmbeddingNet(nn.Module):
     The output is the likelihood of every book in the vocabulary appearing in context
     with the input.
     """
+
     def __init__(self, num_books, book_feature_dim, embedding_dim):
         super(BookEmbeddingNet, self).__init__()
         self.fc1 = nn.Linear(book_feature_dim, embedding_dim)

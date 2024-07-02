@@ -72,6 +72,7 @@ def get_sparse_tensor(
     """
     Maps book ID to sparse vector representing context books (books in the same GoodReads shelves).
     """
+
     def get_label_id(book_ids):
         return [book_to_index[book_id] for book_id in book_ids]
 
