@@ -8,6 +8,7 @@ import torch
 import argparse
 import os
 import pickle
+from constants import BOOK_FEATURE_DIM, EMBEDDING_DIM, NUM_BOOKS
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -49,7 +50,7 @@ if __name__ == "__main__":
     print(f"Using {device}")
 
     # Run training
-    model = BookEmbeddingNet(len(book_to_index), 121, 128).to(device)
+    model = BookEmbeddingNet(NUM_BOOKS, BOOK_FEATURE_DIM, EMBEDDING_DIM).to(device)
     criterion = nn.MSELoss()
     optimizer = optim.SGD(model.parameters(), lr=0.01)
 

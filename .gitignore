@@ -6,3 +6,4 @@ data/
 binaries/
 venv/
 book_embeddings.pem
+app/private_constants.py
