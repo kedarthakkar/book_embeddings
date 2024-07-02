@@ -54,7 +54,7 @@ if __name__ == "__main__":
     criterion = nn.MSELoss()
     optimizer = optim.SGD(model.parameters(), lr=0.01)
 
-    num_epochs = 5
+    num_epochs = 1
     for epoch in range(num_epochs):
         running_loss = 0.0
         for i, row in grouped_interactions.iterrows():
