@@ -13,6 +13,9 @@ def get_db_connection():
 
 @app.route("/search", methods=["GET"])
 def search_books():
+    """
+    Returns 50 similar book titles.
+    """
     query = request.args.get("q", "")
     conn = get_db_connection()
     cur = conn.cursor()
@@ -28,6 +31,9 @@ def search_books():
 
 @app.route("/book", methods=["GET"])
 def book_info():
+    """
+    Returns the book vector corresponding to the chosen book title.
+    """
     query = request.args.get("q", "")
     conn = get_db_connection()
     cur = conn.cursor()
@@ -43,6 +49,9 @@ def book_info():
 
 @app.route("/books", methods=["GET"])
 def similar_books():
+    """
+    Returns the matching book titles, given a list of embedding IDs.
+    """
     books = request.args.getlist("values")
     conn = get_db_connection()
     cur = conn.cursor()

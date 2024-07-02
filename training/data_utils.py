@@ -10,6 +10,11 @@ import pickle
 def interaction_df_to_book_vectors(
     interaction_df: pd.DataFrame, book_to_index: dict[int, int]
 ) -> dict[int, list[float]]:
+    """
+    Maps the interaction dataframe to a collection of book vectors. These are 121-d
+    numeric vectors that represent information about the book, normalized and scaled, along
+    with one-hot encoding for categorical variables.
+    """
     book_embedding_df = interaction_df.copy()
     book_embedding_df = book_embedding_df.drop_duplicates(subset="book_id").reset_index(
         drop=True
@@ -64,6 +69,9 @@ def get_sparse_tensor(
     user_to_index: dict[int, int],
     book_to_index: dict[int, int],
 ):
+    """
+    Maps book ID to sparse vector representing context books (books in the same GoodReads shelves).
+    """
     def get_label_id(book_ids):
         return [book_to_index[book_id] for book_id in book_ids]
 

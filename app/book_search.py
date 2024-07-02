@@ -7,6 +7,8 @@ import json
 from private_constants import PINECONE_KEY
 from book_embedding_net import BookEmbeddingNet
 
+
+# Set up the model and pinecone
 st.title("Book Search")
 
 query = st.text_input("Search for a book:")
@@ -19,6 +21,7 @@ pc = Pinecone(api_key=PINECONE_KEY)
 index = pc.Index("5k-steps")
 select_list = []
 
+# Reads in the query if it's changed and generates the list of matching book titles
 if (
     query
     and st.session_state.get("curr_query") is None
@@ -33,6 +36,7 @@ if (
 
     st.session_state["select_list"] = select_list
 
+# Finds the 10 most similar books to the chosen book title
 selected_option = st.selectbox(
     "Select an option", st.session_state.get("select_list", [])
 )
