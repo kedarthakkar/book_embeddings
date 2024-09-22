@@ -13,7 +13,7 @@ if __name__ == "__main__":
     """
     model = BookEmbeddingNet(NUM_BOOKS, BOOK_FEATURE_DIM, EMBEDDING_DIM)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    state_dict = torch.load("binaries/5k_steps_state_dict.pt", map_location=device)
+    state_dict = torch.load("binaries/one_epoch_state_dict.pt", map_location=device)
     model.load_state_dict(state_dict)
     model.eval()
 
@@ -22,7 +22,7 @@ if __name__ == "__main__":
         book_vectors = pickle.load(handle)
 
     upsert_list = []
-    index = pc.Index("5k-steps")
+    index = pc.Index("one-epoch")
 
     for i, vector in book_vectors.items():
         with torch.no_grad():
@@ -39,12 +39,12 @@ if __name__ == "__main__":
             print("Inserting into Pinecone index")
             index.upsert(
                 vectors=upsert_list,
-                namespace="test-ns",
+                namespace="book-vectors",
             )
             upsert_list = []
 
     print("Inserting into Pinecone index")
     index.upsert(
         vectors=upsert_list,
-        namespace="test-ns",
+        namespace="book-vectors",
     )

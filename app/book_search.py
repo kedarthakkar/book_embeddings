@@ -14,11 +14,11 @@ st.title("Book Search")
 query = st.text_input("Search for a book:")
 model = BookEmbeddingNet(519732, 121, 128)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-state_dict = torch.load("binaries/5k_steps_state_dict.pt", map_location=device)
+state_dict = torch.load("binaries/one_epoch_state_dict.pt", map_location=device)
 model.load_state_dict(state_dict)
 model.eval()
 pc = Pinecone(api_key=PINECONE_KEY)
-index = pc.Index("5k-steps")
+index = pc.Index("one-epoch")
 select_list = []
 
 # Reads in the query if it's changed and generates the list of matching book titles
@@ -51,7 +51,7 @@ if selected_option:
         book_embedding = model.fc1(book_tensor)
 
     query_results = index.query(
-        namespace="test-ns",
+        namespace="book-vectors",
         vector=book_embedding.numpy().flatten().tolist(),
         top_k=10,
         include_values=True,
